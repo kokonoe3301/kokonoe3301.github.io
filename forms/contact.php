@@ -1,35 +1,42 @@
 <?php
- 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // 1. Define recipient email
+    $to = "aratakokonoe91@gmail.com, markbenedict54@yahoo.com"; // Replace with your actual email address
+    
+    // 2. Retrieve and sanitize form data
+    $name = filter_var(trim($_POST['name']), FILTER_SANITIZE_STRING);
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    $message = filter_var(trim($_POST['message']), FILTER_SANITIZE_STRING);
+    
+    // 3. Validate email address
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'aratakokonoe91@gmail.com';
+    $secretKey = 'your-secret-key'; // Replace with your reCAPTCHA secret key
+    $recaptchaUrl = "https://www.google.com/recaptcha/api/siteverify";
+    $response = file_get_contents($recaptchaUrl . "?secret=" . $secretKey . "&response=" . $recaptchaResponse);
+    $responseKeys = json_decode($response, true);
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "Invalid email address.";
+        exit;
+    }
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+    // 4. Set up email parameters
 
-  require 'PHPMailer/PHPMailerAutoload.php';
-  
-  $contact->smtp = array(
-    'host' => 'smtp.gmail.com',
-    'username' => 'example',
-    'password' => '',
-    'port' => '587'
-  );
+    $subject = "Contact Form Submission from $name";
+    $body = "Name: $name\nEmail: $email\n\nMessage:\n$message";
+    $headers = "From: $email\r\n";
+    $headers .= "Reply-To: $email\r\n";
+    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+    
+    // 5. Send the email and check if it was successful
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
-
-  echo $contact->send();
+    if (mail($to, $subject, $body, $headers)) {
+        echo "Email sent successfully!";
+    } else {
+        echo "Failed to send email.";
+    }
+} else {
+    echo "Invalid request.";
+}
 ?>
