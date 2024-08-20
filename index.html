@@ -682,7 +682,7 @@
 
           <div class="col-lg-8 mt-5 mt-lg-0">
 
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+            <form id="contact-form">
               <div class="row">
                 <div class="col-md-6 form-group">
                   <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
@@ -704,7 +704,25 @@
               </div>
               <div class="text-center"><button type="submit">Send Message</button></div>
             </form>
-
+            <script>
+              // Initialize EmailJS with your user ID
+              emailjs.init("aratakokonoe91@gmail.com"); // Replace YOUR_USER_ID with your actual EmailJS user ID
+      
+              // Handle form submission
+              document.getElementById('contact-form').addEventListener('submit', function(event) {
+                  event.preventDefault();
+      
+                  // Send the form data to EmailJS
+                  emailjs.sendForm('service_ogwq7k1', 'template_st84hmc', this)
+                      .then(function(response) {
+                          alert('Message sent successfully!');
+                          console.log('Success:', response);
+                      }, function(error) {
+                          alert('Failed to send message.');
+                          console.error('Error:', error);
+                      });
+              });
+          </script>
           </div>
 
         </div>
