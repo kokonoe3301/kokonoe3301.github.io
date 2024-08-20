@@ -706,14 +706,14 @@
             </form>
             <script>
               // Initialize EmailJS with your user ID
-              emailjs.init("aratakokonoe91@gmail.com"); // Replace YOUR_USER_ID with your actual EmailJS user ID
+              emailjs.init("Arata Kokonoe"); // Replace YOUR_USER_ID with your actual EmailJS user ID
       
               // Handle form submission
               document.getElementById('contact-form').addEventListener('submit', function(event) {
                   event.preventDefault();
       
                   // Send the form data to EmailJS
-                  emailjs.sendForm('service_ogwq7k1', 'template_st84hmc', this)
+                  emailjs.sendForm('service_ogwq7k1', 'template_st84hmc')
                       .then(function(response) {
                           alert('Message sent successfully!');
                           console.log('Success:', response);
